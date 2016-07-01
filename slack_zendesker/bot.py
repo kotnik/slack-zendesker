@@ -4,7 +4,21 @@ from slackbot.bot import listen_to
 from slackbot import settings
 
 
+def format_msg(ticket_id, data):
+    if data:
+        if data.get("ticket"):
+            msg = '<%s/agent/tickets/%s|#%s: %s>\n' % (settings.ZENDESK_URL, ticket_id, ticket_id, data["ticket"]["subject"])
+            msg += '*Created*: %s\n' % data["ticket"]["created_at"]
+            msg += '*Priority*: %s\n' % data["ticket"]["priority"]
+            msg += '*Status*: %s' % data["ticket"]["status"]
+        else:
+            msg = 'Unknown ticket #%s' % ticket_id
+    else:
+        msg = 'Failed to fetch info for #%s' % ticket_id
+    return msg
+
 @listen_to('#(\d+)')
+@listen_to('https.*\/agent\/tickets\/(\d+)')
 def response_ticket_id(message, ticket_id):
     print("processing %s..." % ticket_id)
     try:
@@ -12,13 +26,4 @@ def response_ticket_id(message, ticket_id):
     except Exception as e:
         print(e)
         data = None
-
-    if data:
-        msg = '<%s/agent/tickets/%s|#%s: %s>\n' % (settings.ZENDESK_URL, ticket_id, ticket_id, data["ticket"]["subject"])
-        msg += '*Created*: %s\n' % data["ticket"]["created_at"]
-        msg += '*Priority*: %s\n' % data["ticket"]["priority"]
-        msg += '*Status*: %s' % data["ticket"]["status"]
-    else:
-        msg = 'Failed to fetch info for #%s' % ticket_id
-
-    message.send_webapi(msg)
+    message.send_webapi(format_msg(ticket_id, data))
