@@ -5,10 +5,10 @@ from slackbot import settings
 
 
 @listen_to('#(\d+)')
-def giveme(message, ticket_id):
+def response_ticket_id(message, ticket_id):
     print("processing %s..." % ticket_id)
     try:
-        data = settings.zendesk_class.get_ticket(9513)
+        data = settings.zendesk_class.get_ticket(ticket_id)
     except Exception as e:
         print(e)
         data = None
