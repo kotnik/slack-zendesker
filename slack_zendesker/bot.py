@@ -3,7 +3,6 @@ from __future__ import print_function
 from slackbot.bot import listen_to
 from slackbot import settings
 
-
 def format_msg(ticket_id, data):
     if data:
         if data.get("ticket"):
@@ -23,10 +22,16 @@ def format_msg(ticket_id, data):
     return msg
 
 @listen_to('#(\d+)')
-@listen_to('https.*\/agent\/tickets\/(\d+)')
-def response_ticket_id(message, ticket_id):
-    print("processing %s..." % ticket_id)
+@listen_to('https:\/\/(.*)\.zendesk\.com\/agent\/tickets\/(\d+)')
+def response_ticket_id(message, app=None, ticket_id=None):
+    if ticket_id is None:
+        ticket_id = app
+    elif app != settings.ZENDESK_APP:
+        print("skipping beacuse %s is not our app" % app)
+        return
+
     try:
+        print("processing %s..." % ticket_id)
         data = settings.zendesk_class.get_ticket(ticket_id)
     except Exception as e:
         print(e)
