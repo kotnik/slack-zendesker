@@ -7,7 +7,12 @@ from slackbot import settings
 def format_msg(ticket_id, data):
     if data:
         if data.get("ticket"):
-            msg = '<%s/agent/tickets/%s|#%s: %s>\n' % (settings.ZENDESK_URL, ticket_id, ticket_id, data["ticket"]["subject"])
+            msg = '<https://%s.zendesk.com/agent/tickets/%s|#%s: %s>\n' % (
+                settings.ZENDESK_APP,
+                ticket_id,
+                ticket_id,
+                data["ticket"]["subject"]
+                )
             msg += '*Created*: %s\n' % data["ticket"]["created_at"]
             msg += '*Priority*: %s\n' % data["ticket"]["priority"]
             msg += '*Status*: %s' % data["ticket"]["status"]

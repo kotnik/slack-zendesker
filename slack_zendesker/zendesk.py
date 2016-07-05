@@ -3,8 +3,8 @@ import multiprocessing
 
 
 class Zendesk(object):
-    def __init__(self, zendesk_url, user, password, timeout=5.0):
-        self.zendesk_url = zendesk_url
+    def __init__(self, zendesk_app, user, password, timeout=5.0):
+        self.zendesk_app = zendesk_app
         self.auth = (user, password)
         self.timeout = timeout
 
@@ -12,7 +12,9 @@ class Zendesk(object):
         return requests.get(url, auth=self.auth)
 
     def get_ticket(self, ticket_id):
-        url = '%s/api/v2/tickets/%s.json' % (self.zendesk_url, ticket_id)
+        url = 'https://%s.zendesk.com/api/v2/tickets/%s.json' % (
+            self.zendesk_app, ticket_id
+            )
 
         pool = multiprocessing.Pool(1)
         query = pool.map_async(self._query, [url])
