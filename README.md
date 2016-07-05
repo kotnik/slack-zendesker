@@ -1,4 +1,4 @@
-# Slack zendersker
+# Slack Zendesker
 
 Expands `#\d+` to Zendesk description for lazyness reasons. Not compatible with Python 3.2 due to silly decision to syntax error `u""`.
 
