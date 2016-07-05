@@ -18,7 +18,7 @@ def main():
             settings.ZENDESK_PASS,
             )
     except AttributeError:
-        print('Missing SLACKBOT_ZENDESK_URL, SLACKBOT_ZENDESK_USER or SLACKBOT_ZENDESK_PASS environment variable')
+        print('Missing SLACKBOT_ZENDESK_APP, SLACKBOT_ZENDESK_USER or SLACKBOT_ZENDESK_PASS environment variable')
         sys.exit(1)
 
     print("starting bot...")
