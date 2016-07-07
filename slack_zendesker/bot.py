@@ -21,7 +21,7 @@ def format_msg(ticket_id, data):
         msg = 'Failed to fetch info for #%s' % ticket_id
     return msg
 
-@listen_to('#(\d+)')
+@listen_to(r'\b(?<=#)(\d+)\b')
 @listen_to('https:\/\/(.*)\.zendesk\.com\/agent\/tickets\/(\d+)')
 def response_ticket_id(message, app=None, ticket_id=None):
     if ticket_id is None:
