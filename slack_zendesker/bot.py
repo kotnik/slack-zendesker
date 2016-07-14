@@ -22,6 +22,7 @@ def format_msg(ticket_id, data):
     return msg
 
 @listen_to('#(\d+)')
+@listen_to('ZD-(\d+)')
 @listen_to('https:\/\/%s\.zendesk\.com\/agent\/tickets\/(\d+)' % settings.ZENDESK_APP)
 def response_ticket_id(message, ticket_id=None):
     try:
