@@ -4,21 +4,24 @@ from slackbot.bot import listen_to
 from slackbot import settings
 
 def format_msg(ticket_id, data):
-    if data:
-        if data.get("ticket"):
-            msg = '<https://%s.zendesk.com/agent/tickets/%s|#%s: %s>\n' % (
-                settings.ZENDESK_APP,
-                ticket_id,
-                ticket_id,
-                data["ticket"]["subject"]
-                )
-            msg += '*Created*: %s\n' % data["ticket"]["created_at"]
-            msg += '*Priority*: %s\n' % data["ticket"]["priority"]
-            msg += '*Status*: %s' % data["ticket"]["status"]
-        else:
-            msg = 'Unknown ticket #%s' % ticket_id
-    else:
-        msg = 'Failed to fetch info for #%s' % ticket_id
+    if data is None:
+        print("Failed to fetch info for #%s" % ticket_id)
+        return
+    
+    if "ticket" not in data:
+        print("Unknown ticket #%s" % ticket_id)
+        return
+    
+    msg = "<https://%s.zendesk.com/agent/tickets/%s|#%s: %s>\n" % (
+        settings.ZENDESK_APP,
+        ticket_id,
+        ticket_id,
+        data["ticket"]["subject"]
+        )
+    msg += "*Created*: %s\n" % data["ticket"]["created_at"]
+    msg += "*Priority*: %s\n" % data["ticket"]["priority"]
+    msg += "*Status*: %s" % data["ticket"]["status"]
+    
     return msg
 
 @listen_to('#(\d+)')
@@ -30,4 +33,9 @@ def response_ticket_id(message, ticket_id=None):
     except Exception as e:
         print(e)
         data = None
-    message.send_webapi(format_msg(ticket_id, data))
+        
+    msg = format_msg(ticket_id, data)
+    if msg is None:
+        return
+    
+    message.send_webapi(msg)
