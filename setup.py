@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name="slack_zendesker",
-    version="1.0",
+    version="1.1",
     description="Slack Zendesk URL expander",
     classifiers=[
         "Programming Language :: Python",
